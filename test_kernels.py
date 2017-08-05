@@ -3,6 +3,7 @@
 import numpy as np
 from bisect import bisect_left as python_bisect_left
 from conditional_percentile_kernels import exposed_bisect_left as cython_bisect_left
+from conditional_percentile_kernels import calculate_percentile_loop
 
 
 def python_insert_pop(arr0, idx_in, value_in, idx_out):
@@ -27,3 +28,7 @@ def test_bisect_left():
         idx_cython = cython_bisect_left(arr, x)
         idx_python = python_bisect_left(arr, x)
         assert idx_cython == idx_python
+
+
+def test_calculate_percentile_loop():
+    pass
