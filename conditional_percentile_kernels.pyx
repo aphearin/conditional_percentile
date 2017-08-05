@@ -8,6 +8,9 @@ cimport cython
 @cython.nonecheck(False)
 @cython.wraparound(False)
 cdef long bisect_left(double* arr, double value, long n):
+    """ Return the index where to insert ``value`` in list ``arr`` of length ``n``,
+    assuming ``arr`` is sorted.
+    """
     cdef long ifirst_subarr = 0
     cdef long ilast_subarr = n
     cdef long imid_subarr
@@ -23,6 +26,12 @@ cdef long bisect_left(double* arr, double value, long n):
     else:
         return ifirst_subarr
 
+
+def exposed_bisect_left(double[:] arr, double value):
+    """
+    """
+    cdef long n = arr.shape[0]
+    return bisect_left(&arr[0], value, n)
 
 
 cdef void correspondence_indices_update(long* arr, long n, long idx_in, long idx_out):
