@@ -70,15 +70,20 @@ cdef void update_tables(double* cdf_value_table, long* correspondence_indices,
     cython_insert_pop(&cdf_value_table[0], idx_in, idx_out, cdf_value_in, n)
 
 
+@cython.boundscheck(False)
+@cython.nonecheck(False)
+@cython.wraparound(False)
 def calculate_percentile_loop(double[:] cdf_value_table, long[:] correspondence_indices,
             double[:] cdf_values):
     """
     """
+    cdef long i
     cdef long ntable = cdf_value_table.shape[0]
     cdef long num_loop = cdf_values.shape[0]
+    cdef double new_cdf_value
     for i in range(num_loop):
         new_cdf_value = cdf_values[i]
-        update_tables(cdf_value_table, correspondence_indices, new_cdf_value, ntable)
+        update_tables(&cdf_value_table[0], &correspondence_indices[0], new_cdf_value, ntable)
         raise NotImplementedError("Need to record each percentile")
 
 
