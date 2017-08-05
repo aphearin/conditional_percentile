@@ -4,20 +4,6 @@ from libc.math cimport fmod
 cimport cython
 
 
-cdef void insertion_update(long* arr, long n, long idx_in):
-    cdef long i
-    for i in range(n):
-        if arr[i] >= idx_in:
-            arr += 1
-
-
-cdef void extraction_update(long* arr, long n, long idx_in):
-    cdef long i
-    for i in range(n):
-        if arr[i] >= idx_in:
-            arr -= 1
-
-
 @cython.boundscheck(False)
 @cython.nonecheck(False)
 @cython.wraparound(False)
