@@ -37,6 +37,15 @@ def exposed_bisect_left(double[:] arr, double value):
 
 cdef void correspondence_indices_update(long* arr, long n, long idx_in, long idx_out):
     """
+    The ``correspondence_indices_update`` pops out the last value of ``arr`` and
+    inserts a new element at the beginning, updating the other values to help maintain
+    the order of the sorting window.
+
+    The array ``arr`` stores the indices that are to be popped out of the
+    ``property2`` array input to the calculate_percentile_loop function,
+    sorted such that the last element of ``arr`` stores the index of
+    the next elemement of ``property2`` to be popped out.
+
     """
     cdef long i
     cdef long increment = 0
@@ -57,6 +66,9 @@ cdef void correspondence_indices_update(long* arr, long n, long idx_in, long idx
 
 
 cdef void cython_insert_pop(double* arr, long idx_in, long idx_out, double value_in, long n):
+    """ Pop out the value stored in index ``idx_out`` of array ``arr``,
+    and insert ``value_in`` at index ``idx_in`` of the final array.
+    """
     cdef int i
 
     if idx_in <= idx_out:
@@ -70,7 +82,12 @@ cdef void cython_insert_pop(double* arr, long idx_in, long idx_out, double value
 
 cdef long update_tables(double* cdf_value_table, long* correspondence_indices,
             double cdf_value_in, long n):
-    """
+    """ Insert ``cdf_value_in`` into ``cdf_value_table``, maintaining its sorted order.
+    Remove the value from ``cdf_value_table`` corresponding to
+    the most massive element, whose index is stored in the
+    final element in ``correspondence_indices``. Update the ``correspondence_indices``
+    array after popping out the most massive element, so that the next-most-massive
+    element now appears at the end of ``correspondence_indices``.
     """
     cdef long idx_in = bisect_left(&cdf_value_table[0], cdf_value_in, n)
     cdef long idx_out = correspondence_indices[n-1]
