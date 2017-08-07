@@ -6,6 +6,10 @@ import numpy as np
 from bisect import bisect_left as python_bisect_left
 from conditional_percentile_kernels import exposed_bisect_left as cython_bisect_left
 from conditional_percentile import rank_order_function, conditional_window_ranks
+from astropy.utils.misc import NumpyRNGContext
+
+
+fixed_seed = 43
 
 
 def python_insert_pop(arr0, idx_in, value_in, idx_out):
@@ -25,8 +29,9 @@ def test_bisect_left():
     num_tests = int(1e3)
     num_arr = 11*13
     for i in range(num_tests):
-        arr = np.sort(np.random.random(num_arr))
-        x = np.random.rand()
+        with NumpyRNGContext(i):
+            arr = np.sort(np.random.random(num_arr))
+            x = np.random.rand()
         idx_cython = cython_bisect_left(arr, x)
         idx_python = python_bisect_left(arr, x)
         assert idx_cython == idx_python
@@ -35,7 +40,9 @@ def test_bisect_left():
 def test_conditional_window_ranks1a():
     npts = int(5e4)
     property1 = np.linspace(1, 0, npts)
-    property2 = np.random.rand(npts)
+
+    with NumpyRNGContext(fixed_seed):
+        property2 = np.random.rand(npts)
 
     num_window = 101
     result = conditional_window_ranks(property1, property2, num_window=num_window,
@@ -48,8 +55,9 @@ def test_conditional_window_ranks1a():
 
 def test_conditional_window_ranks1b():
     npts = int(5e4)
-    property1 = np.random.rand(npts)
-    property2 = np.random.rand(npts)
+    with NumpyRNGContext(fixed_seed):
+        property1 = np.random.rand(npts)
+        property2 = np.random.rand(npts)
 
     num_window = 101
     result = conditional_window_ranks(property1, property2, num_window=num_window,
@@ -66,7 +74,9 @@ def test_conditional_window_ranks1b():
 def test_conditional_window_ranks2():
     npts = int(5e4)
     property1 = np.linspace(1, 0, npts)
-    property2 = np.random.rand(npts)
+
+    with NumpyRNGContext(fixed_seed):
+        property2 = np.random.rand(npts)
 
     num_window = 101
     result = conditional_window_ranks(property1, property2, num_window=num_window,
@@ -81,7 +91,8 @@ def test_conditional_window_ranks2():
 def test_conditional_window_ranks_sensible_quantiles():
     npts = int(5e4)
     property1 = np.linspace(1, 0, npts)
-    property2 = np.random.rand(npts)
+    with NumpyRNGContext(fixed_seed):
+        property2 = np.random.rand(npts)
 
     num_window = 501
     result = conditional_window_ranks(property1, property2, num_window=num_window,
@@ -100,8 +111,9 @@ def test_rank_order_function1():
 
 def test_conditional_window_ranks_speed():
     npts = int(1e6)
-    property1 = np.random.rand(npts)
-    property2 = np.random.rand(npts)
+    with NumpyRNGContext(fixed_seed):
+        property1 = np.random.rand(npts)
+        property2 = np.random.rand(npts)
 
     num_window = 1001
     start = time()
