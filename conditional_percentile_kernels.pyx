@@ -111,7 +111,11 @@ def calculate_percentile_loop(double[:] cdf_value_table, long[:] correspondence_
     cdef long i, new_idx
     cdef double new_cdf_value
     cdef long[:] result = np.zeros(num_loop, dtype='i8') - 1
-    for i in range(nwindow/2: -nwindow/2+1):
+
+    cdef long ifirst = nwindow/2
+    cdef long ilast = num_loop - nwindow/2
+
+    for i in range(ifirst, ilast):
         new_cdf_value = cdf_values[i]
         result[i] = update_tables(&cdf_value_table[0], &correspondence_indices[0], new_cdf_value, nwindow)
     return result

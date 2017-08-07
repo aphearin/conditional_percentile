@@ -34,7 +34,7 @@ def test_bisect_left():
 
 def test_conditional_window_ranks1():
     npts = 1000
-    property1 = np.random.rand(npts)
+    property1 = np.linspace(1, 0, npts)
     property2 = np.random.rand(npts)
 
     num_window = 101
@@ -49,7 +49,7 @@ def test_conditional_window_ranks1():
 @pytest.mark.xfail
 def test_conditional_window_ranks2():
     npts = 1000
-    property1 = np.random.rand(npts)
+    property1 = np.linspace(1, 0, npts)
     property2 = np.random.rand(npts)
 
     num_window = 101
