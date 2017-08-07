@@ -64,7 +64,6 @@ def test_conditional_window_ranks1b():
     assert not np.any(sorted_result[num_window/2: -num_window/2+1] == -1)
 
 
-@pytest.mark.xfail
 def test_conditional_window_ranks2():
     npts = 1000
     property1 = np.linspace(1, 0, npts)
@@ -74,7 +73,21 @@ def test_conditional_window_ranks2():
     result = conditional_window_ranks(property1, property2, num_window=num_window,
             endpoint_fill_value='auto')
     assert result.min() >= 0
-    assert result.max() <= num_window - 1
+    assert result.max() <= num_window
+
+
+@pytest.mark.xfail
+def test_conditional_window_ranks_sensible_quantiles():
+    npts = int(5e4)
+    property1 = np.linspace(1, 0, npts)
+    property2 = np.random.rand(npts)
+
+    num_window = 501
+    result = conditional_window_ranks(property1, property2, num_window=num_window,
+            endpoint_fill_value='auto')
+    median_result = np.median(result)
+    correct_median = num_window/2.
+    assert np.allclose(median_result, correct_median, rtol=0.2)
 
 
 def test_rank_order_function1():
