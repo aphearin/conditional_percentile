@@ -94,7 +94,7 @@ cdef long update_tables(double* cdf_value_table, long* correspondence_indices,
 
     correspondence_indices_update(&correspondence_indices[0], n, idx_in, idx_out)
     cython_insert_pop(&cdf_value_table[0], idx_in, idx_out, cdf_value_in, n)
-    return idx_in
+    return correspondence_indices[n/2]
 
 
 @cython.boundscheck(False)
