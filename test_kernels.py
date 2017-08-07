@@ -5,6 +5,7 @@ import numpy as np
 from bisect import bisect_left as python_bisect_left
 from conditional_percentile_kernels import exposed_bisect_left as cython_bisect_left
 from conditional_percentile_kernels import calculate_percentile_loop
+from conditional_percentile import rank_order_function
 
 
 def python_insert_pop(arr0, idx_in, value_in, idx_out):
@@ -31,5 +32,12 @@ def test_bisect_left():
         assert idx_cython == idx_python
 
 
-def test_expected_result1():
+def test_calculate_percentile_loop1():
     pass
+
+
+def test_rank_order_function():
+    x = [0.1, 0.95, 0.5, -100]
+    result = rank_order_function(x)
+    correct_result = [1, 3, 2, 0]
+    assert np.all(result == correct_result)
