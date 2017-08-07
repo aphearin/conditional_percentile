@@ -40,10 +40,13 @@ def test_conditional_window_ranks1():
     num_window = 101
     result = conditional_window_ranks(property1, property2, num_window=num_window,
             endpoint_fill_value=-1)
-    assert np.all(result[:10] == -1)
-    assert np.all(result[-10:] == -1)
+
+    assert np.all(result[:num_window/2] == -1)
+    assert np.all(result[-num_window/2+1:] == -1)
+    assert not np.any(result[num_window/2: -num_window/2+1] == -1)
 
 
+@pytest.mark.xfail
 def test_conditional_window_ranks2():
     npts = 1000
     property1 = np.random.rand(npts)
@@ -56,7 +59,7 @@ def test_conditional_window_ranks2():
     assert result.max() <= num_window - 1
 
 
-def test_rank_order_function():
+def test_rank_order_function1():
     x = [0.1, 0.95, 0.5, -100]
     result = rank_order_function(x)
     correct_result = [1, 3, 2, 0]
