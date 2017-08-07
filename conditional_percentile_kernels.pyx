@@ -104,14 +104,16 @@ def calculate_percentile_loop(double[:] cdf_value_table, long[:] correspondence_
             double[:] cdf_values):
     """
     """
-    cdef long i, new_idx
-    cdef long ntable = cdf_value_table.shape[0]
+    cdef long nwindow = cdf_value_table.shape[0]
     cdef long num_loop = cdf_values.shape[0]
+
+    assert nwindow % 2 == 1, "Window size = len(cdf_value_table) = {0} must be odd".format(nwindow)
+    cdef long i, new_idx
     cdef double new_cdf_value
-    cdef long[:] result = np.zeros(num_loop, dtype='i8')
-    for i in range(num_loop):
+    cdef long[:] result = np.zeros(num_loop, dtype='i8') - 1
+    for i in range(nwindow/2: -nwindow/2+1):
         new_cdf_value = cdf_values[i]
-        result[i] = update_tables(&cdf_value_table[0], &correspondence_indices[0], new_cdf_value, ntable)
+        result[i] = update_tables(&cdf_value_table[0], &correspondence_indices[0], new_cdf_value, nwindow)
     return result
 
 
