@@ -1,12 +1,11 @@
 """
 """
+from time import time
 import pytest
 import numpy as np
 from bisect import bisect_left as python_bisect_left
 from conditional_percentile_kernels import exposed_bisect_left as cython_bisect_left
-from conditional_percentile_kernels import calculate_percentile_loop
 from conditional_percentile import rank_order_function, conditional_window_ranks
-from halotools.utils import unsorting_indices
 
 
 def python_insert_pop(arr0, idx_in, value_in, idx_out):
@@ -34,7 +33,7 @@ def test_bisect_left():
 
 
 def test_conditional_window_ranks1a():
-    npts = 1000
+    npts = int(5e4)
     property1 = np.linspace(1, 0, npts)
     property2 = np.random.rand(npts)
 
@@ -48,7 +47,7 @@ def test_conditional_window_ranks1a():
 
 
 def test_conditional_window_ranks1b():
-    npts = 1000
+    npts = int(5e4)
     property1 = np.random.rand(npts)
     property2 = np.random.rand(npts)
 
@@ -65,15 +64,17 @@ def test_conditional_window_ranks1b():
 
 
 def test_conditional_window_ranks2():
-    npts = 1000
+    npts = int(5e4)
     property1 = np.linspace(1, 0, npts)
     property2 = np.random.rand(npts)
 
     num_window = 101
     result = conditional_window_ranks(property1, property2, num_window=num_window,
             endpoint_fill_value='auto')
-    assert result.min() >= 0
-    assert result.max() <= num_window
+    msg1 = "Minimum value of conditional_window_ranks must be non-negative"
+    assert result.min() >= 0, msg1
+    msg2 = "Minimum value of conditional_window_ranks cannot be exceed num_window"
+    assert result.max() <= num_window, msg2
 
 
 @pytest.mark.xfail
@@ -95,3 +96,18 @@ def test_rank_order_function1():
     result = rank_order_function(x)
     correct_result = [1, 3, 2, 0]
     assert np.all(result == correct_result)
+
+
+def test_conditional_window_ranks_speed():
+    npts = int(1e6)
+    property1 = np.random.rand(npts)
+    property2 = np.random.rand(npts)
+
+    num_window = 1001
+    start = time()
+    result = conditional_window_ranks(property1, property2, num_window=num_window,
+            endpoint_fill_value='auto')
+    end = time()
+    runtime = end - start
+    assert runtime < 5, "Runtime for 10^6 points should be less than 5 seconds"
+
