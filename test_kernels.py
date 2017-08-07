@@ -6,6 +6,7 @@ from bisect import bisect_left as python_bisect_left
 from conditional_percentile_kernels import exposed_bisect_left as cython_bisect_left
 from conditional_percentile_kernels import calculate_percentile_loop
 from conditional_percentile import rank_order_function, conditional_window_ranks
+from halotools.utils import unsorting_indices
 
 
 def python_insert_pop(arr0, idx_in, value_in, idx_out):
@@ -32,7 +33,7 @@ def test_bisect_left():
         assert idx_cython == idx_python
 
 
-def test_conditional_window_ranks1():
+def test_conditional_window_ranks1a():
     npts = 1000
     property1 = np.linspace(1, 0, npts)
     property2 = np.random.rand(npts)
@@ -44,6 +45,23 @@ def test_conditional_window_ranks1():
     assert np.all(result[:num_window/2] == -1)
     assert np.all(result[-num_window/2+1:] == -1)
     assert not np.any(result[num_window/2: -num_window/2+1] == -1)
+
+
+def test_conditional_window_ranks1b():
+    npts = 1000
+    property1 = np.random.rand(npts)
+    property2 = np.random.rand(npts)
+
+    num_window = 101
+    result = conditional_window_ranks(property1, property2, num_window=num_window,
+            endpoint_fill_value=-1)
+
+    idx_property1_sorted = np.argsort(-property1)
+    sorted_result = result[idx_property1_sorted]
+
+    assert np.all(sorted_result[:num_window/2] == -1)
+    assert np.all(sorted_result[-num_window/2+1:] == -1)
+    assert not np.any(sorted_result[num_window/2: -num_window/2+1] == -1)
 
 
 @pytest.mark.xfail
