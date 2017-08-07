@@ -5,7 +5,7 @@ from conditional_percentile_kernels import calculate_percentile_loop
 from halotools.utils import unsorting_indices
 
 
-def conditional_window_ranks(property1, property2, num_window=500,
+def conditional_window_ranks(property1, property2, num_window=501,
             endpoint_fill_value='auto'):
     """
     """
