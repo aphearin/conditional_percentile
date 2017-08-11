@@ -13,4 +13,4 @@ def test1():
     num_window = 3
     endpoint_fill_value = -9
     result = conditional_window_ranks(property1, property2, num_window, endpoint_fill_value)
-    assert np.all(result == -100)
+    assert np.all(result == [-9, 1, 1, 1, 1, -9])
