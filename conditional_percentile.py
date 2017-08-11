@@ -22,8 +22,8 @@ def conditional_window_ranks(property1, property2, num_window=501,
     idx_property1_sorted = np.argsort(-property1)
     sorted_property2 = property2[idx_property1_sorted]
 
-    cdf_value_table_init = sorted_property2[:num_window]
-    correspondence_indices_init = rank_order_function(cdf_value_table_init)
+    correspondence_indices_init = rank_order_function(sorted_property2[:num_window])
+    cdf_value_table_init = np.sort(sorted_property2[:num_window])
 
     window_ranks = np.array(calculate_percentile_loop(cdf_value_table_init,
             correspondence_indices_init, sorted_property2))
