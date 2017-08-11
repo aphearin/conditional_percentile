@@ -71,7 +71,6 @@ def test_conditional_window_ranks1b():
     assert not np.any(sorted_result[num_window/2: -num_window/2+1] == -99)
 
 
-@pytest.mark.xfail
 def test_conditional_window_ranks2():
     npts = int(5e4)
     property1 = np.linspace(1, 0, npts)
@@ -88,7 +87,6 @@ def test_conditional_window_ranks2():
     assert result.max() <= num_window, msg2
 
 
-@pytest.mark.xfail
 def test_conditional_window_ranks_sensible_quantiles():
     npts = int(5e4)
     property1 = np.linspace(1, 0, npts)
