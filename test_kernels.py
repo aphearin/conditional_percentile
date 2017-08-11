@@ -116,9 +116,16 @@ def test_conditional_window_ranks_speed():
 
     num_window = 1001
     start = time()
-    result = conditional_window_ranks(property1, property2, num_window=num_window,
-            endpoint_fill_value='auto')
+    result = conditional_window_ranks(property1, property2, num_window=num_window, endpoint_fill_value='auto')
     end = time()
     runtime = end - start
     assert runtime < 5, "Runtime for 10^6 points should be less than 5 seconds"
 
+
+def test_simple_array1():
+    property1 = np.arange(7., 0, -1)
+    property2 = np.arange(20., 13, -1)
+    num_window = 3
+    endpoint_fill_value = -9
+    result = conditional_window_ranks(property1, property2, num_window, endpoint_fill_value)
+    assert np.all(result == -100)
