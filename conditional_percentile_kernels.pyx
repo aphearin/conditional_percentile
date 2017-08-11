@@ -48,7 +48,7 @@ cdef void correspondence_indices_update(long* arr, long n, long idx_in, long idx
 
     """
     cdef long i
-    cdef long increment = 0
+    # print("Within ``correspondence_indices_update``, (idx_in, idx_out) = ({0}, {1})".format(idx_in, idx_out))
 
     for i in range(1, n-1):
         arr[i] = arr[i-1]
@@ -91,6 +91,7 @@ cdef long update_tables(double* cdf_value_table, long* correspondence_indices,
     """
     cdef long idx_in = bisect_left(&cdf_value_table[0], cdf_value_in, n)
     cdef long idx_out = correspondence_indices[n-1]
+    print("(idx_in, idx_out) = ({0}, {1})".format(idx_in, idx_out))
 
     correspondence_indices_update(&correspondence_indices[0], n, idx_in, idx_out)
     cython_insert_pop(&cdf_value_table[0], idx_in, idx_out, cdf_value_in, n)
@@ -110,23 +111,26 @@ def calculate_percentile_loop(double[:] cdf_value_table, long[:] correspondence_
     assert nwindow % 2 == 1, "Window size = len(cdf_value_table) = {0} must be odd".format(nwindow)
     cdef long i, new_idx
     cdef double new_cdf_value
-    cdef long[:] result = np.zeros(num_loop, dtype='i8') - 1
+    cdef long[:] percentile_index = np.zeros(num_loop, dtype='i8') - 1
 
     print("Initial cdf_value_table = {0}".format(np.array(cdf_value_table)))
     print("Initial correspondence_indices = {0}".format(np.array(correspondence_indices)))
     print("Initial cdf_values = {0}\n".format(np.array(cdf_values)))
 
-    for i in range(nwindow-1, num_loop):
-        print("...starting loop for i = {0}".format(i))
+    percentile_index[nwindow/2] = correspondence_indices[nwindow/2]
+
+    print("...starting loop...\n")
+    for i in range(nwindow, num_loop):
+        print("...working on loop index i = {0}".format(i))
         new_cdf_value = cdf_values[i]
         print("new_cdf_value = {0}".format(new_cdf_value))
-        result[i-nwindow/2] = update_tables(&cdf_value_table[0], &correspondence_indices[0],
+        percentile_index[i-nwindow/2] = update_tables(&cdf_value_table[0], &correspondence_indices[0],
                 new_cdf_value, nwindow)
-        print("result = {0}".format(result[i-nwindow/2]))
+        print("percentile_index = {0}".format(percentile_index[i-nwindow/2]))
         print("Updated cdf_value_table = {0}".format(np.array(cdf_value_table)))
         print("Updated correspondence_indices = {0}".format(np.array(correspondence_indices)))
         print("\n")
-    return result
+    return percentile_index
 
 
 
