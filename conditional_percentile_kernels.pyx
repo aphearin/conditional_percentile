@@ -65,6 +65,11 @@ cdef void correspondence_indices_update(long* arr, long n, long idx_in, long idx
         arr[0] -= 1
 
 
+def exposed_correspondence_indices_update(long[:] arr, long n, long idx_in, long idx_out):
+    correspondence_indices_update(&arr[0], n, idx_in, idx_out)
+    return arr
+
+
 cdef void cython_insert_pop(double* arr, long idx_in, long idx_out, double value_in, long n):
     """ Pop out the value stored in index ``idx_out`` of array ``arr``,
     and insert ``value_in`` at index ``idx_in`` of the final array.
