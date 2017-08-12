@@ -30,15 +30,18 @@ def test_update_tables1():
     cdf_value_table = np.array((0., 1, 2, 3, 5.))
     correspondence_indices = np.array((4, 0, 1, 2, 3))
     cdf_value_in = 6.
-    n = len(cdf_value_table)
-    result = expose_update_tables(cdf_value_table, correspondence_indices, cdf_value_in, n)
-    updated_cdf_value_table = np.array(result[0])
-    updated_correspondence_indices = np.array(result[1])
-    new_rank = result[2]
+    result = expose_update_tables(cdf_value_table, correspondence_indices,
+            cdf_value_in, len(cdf_value_table))
 
+    updated_cdf_value_table = np.array(result[0])
     assert np.all(updated_cdf_value_table == (0., 1, 2, 5, 6))
+
+    updated_correspondence_indices = np.array(result[1])
     assert np.all(updated_correspondence_indices == (3, 4, 0, 1, 2))
+
+    new_rank = result[2]
     assert new_rank == 2
+
 
 # def test_conditional_window_ranks1a():
 #     npts = int(5e4)

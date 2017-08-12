@@ -98,6 +98,7 @@ cdef long update_tables(double* cdf_value_table, long* correspondence_indices,
         idx_in = n-1
     cdef long idx_out = correspondence_indices[n-1]
     print("(idx_in, idx_out) = ({0}, {1})".format(idx_in, idx_out))
+    print("correspondence_indices[{0}] = {1}".format(n/2, correspondence_indices[n/2]))
 
     cdef long rank_at_window_middle = correspondence_indices[n/2]
     correspondence_indices_update(&correspondence_indices[0], n, idx_in, idx_out)
