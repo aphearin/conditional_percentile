@@ -19,3 +19,23 @@ def test_bisect_left1():
         idx_cython = cython_bisect_left(arr, x)
         idx_python = python_bisect_left(arr, x)
         assert idx_cython == idx_python
+
+
+def test_bisect_left_endpoint_behavior1():
+    idx = cython_bisect_left(np.array((0, 1., 2)), -1)
+    assert idx == 0
+
+
+def test_bisect_left_endpoint_behavior2():
+    idx = cython_bisect_left(np.array((0, 1., 2)), 0)
+    assert idx == 0
+
+
+def test_bisect_right_endpoint_behavior1():
+    idx = cython_bisect_left(np.array((0, 1., 2)), 3)
+    assert idx == 3
+
+
+def test_bisect_right_endpoint_behavior2():
+    idx = cython_bisect_left(np.array((0, 1., 2)), 2)
+    assert idx == 2
