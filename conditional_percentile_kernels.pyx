@@ -99,9 +99,10 @@ cdef long update_tables(double* cdf_value_table, long* correspondence_indices,
     cdef long idx_out = correspondence_indices[n-1]
     print("(idx_in, idx_out) = ({0}, {1})".format(idx_in, idx_out))
 
+    cdef long rank_at_window_middle = correspondence_indices[n/2]
     correspondence_indices_update(&correspondence_indices[0], n, idx_in, idx_out)
     cython_insert_pop(&cdf_value_table[0], idx_in, idx_out, cdf_value_in, n)
-    return correspondence_indices[n/2]
+    return rank_at_window_middle
 
 
 @cython.boundscheck(False)
@@ -121,9 +122,10 @@ def calculate_percentile_loop(double[:] cdf_value_table, long[:] correspondence_
 
     print("Initial cdf_value_table = {0}".format(np.array(cdf_value_table)))
     print("Initial correspondence_indices = {0}".format(np.array(correspondence_indices)))
-    print("Initial cdf_values = {0}\n".format(np.array(cdf_values)))
+    print("Initial cdf_values = {0}".format(np.array(cdf_values)))
 
     percentile_index[nwindow/2] = correspondence_indices[nwindow/2]
+    print("percentile_index[{0}] = {1}\n".format(nwindow/2, percentile_index[nwindow/2]))
 
     print("...starting loop...\n")
     for i in range(nwindow/2+1, num_loop-nwindow/2-1):
@@ -132,7 +134,7 @@ def calculate_percentile_loop(double[:] cdf_value_table, long[:] correspondence_
         print("new_cdf_value = {0}".format(new_cdf_value))
         percentile_index[i] = update_tables(&cdf_value_table[0], &correspondence_indices[0],
                 new_cdf_value, nwindow)
-        print("percentile_index = {0}".format(percentile_index[i]))
+        print("percentile_index[{0}] = {1}".format(i, percentile_index[i]))
         print("Updated cdf_value_table = {0}".format(np.array(cdf_value_table)))
         print("Updated correspondence_indices = {0}".format(np.array(correspondence_indices)))
         print("\n")
