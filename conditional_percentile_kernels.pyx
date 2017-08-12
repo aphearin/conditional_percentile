@@ -126,13 +126,13 @@ def calculate_percentile_loop(double[:] cdf_value_table, long[:] correspondence_
     percentile_index[nwindow/2] = correspondence_indices[nwindow/2]
 
     print("...starting loop...\n")
-    for i in range(nwindow, num_loop):
+    for i in range(nwindow/2+1, num_loop-nwindow/2-1):
         print("...working on loop index i = {0}".format(i))
-        new_cdf_value = cdf_values[i]
+        new_cdf_value = cdf_values[i+nwindow/2]
         print("new_cdf_value = {0}".format(new_cdf_value))
-        percentile_index[i-nwindow/2] = update_tables(&cdf_value_table[0], &correspondence_indices[0],
+        percentile_index[i] = update_tables(&cdf_value_table[0], &correspondence_indices[0],
                 new_cdf_value, nwindow)
-        print("percentile_index = {0}".format(percentile_index[i-nwindow/2]))
+        print("percentile_index = {0}".format(percentile_index[i]))
         print("Updated cdf_value_table = {0}".format(np.array(cdf_value_table)))
         print("Updated correspondence_indices = {0}".format(np.array(correspondence_indices)))
         print("\n")
