@@ -36,6 +36,9 @@ def test_update_tables1():
     updated_correspondence_indices = np.array(result[1])
     new_rank = result[2]
 
+    assert np.all(updated_cdf_value_table == (0., 1, 2, 5, 6))
+    assert np.all(updated_correspondence_indices == (3, 4, 0, 1, 2))
+    assert new_rank == 2
 
 # def test_conditional_window_ranks1a():
 #     npts = int(5e4)
