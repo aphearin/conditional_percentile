@@ -4,6 +4,7 @@ import numpy as np
 from conditional_percentile import get_initial_windows, conditional_window_ranks
 
 
+
 # def test1():
 #     sorted_property2 = [5., 4, 3, 2, 1, 0]
 #     num_window = 3

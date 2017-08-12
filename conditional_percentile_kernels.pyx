@@ -94,6 +94,8 @@ cdef long update_tables(double* cdf_value_table, long* correspondence_indices,
     element now appears at the end of ``correspondence_indices``.
     """
     cdef long idx_in = bisect_left(&cdf_value_table[0], cdf_value_in, n)
+    if idx_in == n:
+        idx_in = n-1
     cdef long idx_out = correspondence_indices[n-1]
     print("(idx_in, idx_out) = ({0}, {1})".format(idx_in, idx_out))
 
