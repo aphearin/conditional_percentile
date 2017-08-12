@@ -21,16 +21,25 @@ def conditional_window_ranks(property1, property2, num_window=501,
     window_ranks = np.array(calculate_percentile_loop(cdf_value_table_init,
             correspondence_indices_init, sorted_property2))
 
-    if endpoint_fill_value == 'auto':
-        low_end_result = rank_order_function(sorted_property2[:num_window])
-        high_end_result = rank_order_function(sorted_property2[-num_window:])
-        window_ranks[:num_window/2] = low_end_result[:num_window/2]
-        window_ranks[-num_window/2+1:] = high_end_result[-num_window/2+1:]
-    else:
-        window_ranks[:num_window/2] = endpoint_fill_value
-        window_ranks[-num_window/2+1:] = endpoint_fill_value
+    window_ranks = fill_in_endpoints(sorted_property2, window_ranks,
+            num_window, endpoint_fill_value)
 
     return window_ranks[unsorting_indices(idx_property1_sorted)]
+
+
+def fill_in_endpoints(prop2, ranks, num_window, fill_value):
+    """
+    """
+    if fill_value == 'auto':
+        low_end_result = rank_order_function(prop2[:num_window])
+        high_end_result = rank_order_function(prop2[-num_window:])
+        ranks[:num_window/2] = low_end_result[:num_window/2]
+        ranks[-num_window/2+1:] = high_end_result[-num_window/2+1:]
+    else:
+        ranks[:num_window/2] = fill_value
+        ranks[-num_window/2+1:] = fill_value
+
+    return ranks
 
 
 def rank_order_function(arr):
