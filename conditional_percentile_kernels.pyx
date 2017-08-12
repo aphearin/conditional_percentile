@@ -105,6 +105,14 @@ cdef long update_tables(double* cdf_value_table, long* correspondence_indices,
     return rank_at_window_middle
 
 
+def expose_update_tables(double[:] cdf_value_table, long[:] correspondence_indices,
+            double cdf_value_in, long n):
+    """
+    """
+    new_rank = update_tables(&cdf_value_table[0], &correspondence_indices[0], cdf_value_in, n)
+    return cdf_value_table, correspondence_indices, new_rank
+
+
 @cython.boundscheck(False)
 @cython.nonecheck(False)
 @cython.wraparound(False)

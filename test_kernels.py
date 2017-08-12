@@ -5,6 +5,7 @@ import pytest
 import numpy as np
 from bisect import bisect_left as python_bisect_left
 from conditional_percentile_kernels import exposed_bisect_left as cython_bisect_left
+from conditional_percentile_kernels import expose_update_tables
 from conditional_percentile import rank_order_function, conditional_window_ranks
 from astropy.utils.misc import NumpyRNGContext
 
@@ -23,6 +24,17 @@ def python_insert_pop(arr0, idx_in, value_in, idx_out):
         arr.insert(idx_in+1, value_in)
         arr.pop(idx_out)
     return np.array(arr, dtype=int)
+
+
+def test_update_tables1():
+    cdf_value_table = np.array((0., 1, 2, 3, 5.))
+    correspondence_indices = np.array((4, 0, 1, 2, 3))
+    cdf_value_in = 6.
+    n = len(cdf_value_table)
+    result = expose_update_tables(cdf_value_table, correspondence_indices, cdf_value_in, n)
+    updated_cdf_value_table = np.array(result[0])
+    updated_correspondence_indices = np.array(result[1])
+    new_rank = result[2]
 
 
 # def test_conditional_window_ranks1a():
