@@ -25,18 +25,6 @@ def python_insert_pop(arr0, idx_in, value_in, idx_out):
     return np.array(arr, dtype=int)
 
 
-def test_bisect_left():
-    num_tests = int(1e3)
-    num_arr = 11*13
-    for i in range(num_tests):
-        with NumpyRNGContext(i):
-            arr = np.sort(np.random.random(num_arr))
-            x = np.random.rand()
-        idx_cython = cython_bisect_left(arr, x)
-        idx_python = python_bisect_left(arr, x)
-        assert idx_cython == idx_python
-
-
 def test_conditional_window_ranks1a():
     npts = int(5e4)
     property1 = np.linspace(1, 0, npts)
